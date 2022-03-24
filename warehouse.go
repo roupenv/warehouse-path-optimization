@@ -1,5 +1,11 @@
 package main
 
+import (
+	"fmt"
+
+	"github.com/yourbasic/graph"
+)
+
 type workArea struct {
 	numberItems int
 }
@@ -20,6 +26,10 @@ type neighborNode struct {
 	junctionNode
 	id int
 }
+type warehouseGraph struct {
+	edges     []int64
+	neighbors []neighborNode
+}
 
 type warehouse struct {
 	junctions        map[junctionNode]junctionData
@@ -27,6 +37,7 @@ type warehouse struct {
 	workAreaLocation junctionNode
 	productLocs      map[string]int
 	aisleLocs        map[int]area
+	wGraph           *graph.Immutable
 }
 
 func (w *warehouse) initialize(init warehouse) {
@@ -35,6 +46,11 @@ func (w *warehouse) initialize(init warehouse) {
 	w.workAreaLocation = init.workAreaLocation
 	w.productLocations(init)
 	w.aisleLocations(init)
+	w.wGraph = initializeGraph(warehouseGraph{w.getEdgeDistances(), w.getNeighborNodes()})
+	fmt.Println("Warehouse Initialized")
+	fmt.Println(w.wGraph)
+	fmt.Println()
+
 }
 
 func (w warehouse) getEdgeDistances() []int64 {
@@ -62,16 +78,4 @@ func (w warehouse) getNeighborNodes() []neighborNode {
 		}
 	}
 	return neighborNodes
-}
-
-type warehouseNodes struct {
-	edges     []int64
-	neighbors []neighborNode
-}
-
-func (w warehouse) getAllEdges() warehouseNodes {
-	edgeDistance := w.getEdgeDistances()
-	neighborNodes := w.getNeighborNodes()
-
-	return warehouseNodes{edges: edgeDistance, neighbors: neighborNodes}
 }

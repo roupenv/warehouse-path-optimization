@@ -28,8 +28,8 @@ type worker struct {
 	currentItems          int
 }
 
-func (wo *worker) move(newLocation int, g *graph.Immutable, warehouse *warehouse) {
-	path, dist := graph.ShortestPath(g, int(wo.currentLocation), newLocation)
+func (wo *worker) move( warehouse *warehouse, newLocation int,) {
+	path, dist := graph.ShortestPath(warehouse.wGraph, int(wo.currentLocation), newLocation)
 	endOfPath := path[len(path)-1]
 	for i := 0; i < len(path); i++ {
 		// fmt.Println(path[i])
@@ -43,8 +43,8 @@ func (wo *worker) move(newLocation int, g *graph.Immutable, warehouse *warehouse
 
 }
 
-func (wo *worker) goHome(g *graph.Immutable, warehouse *warehouse) {
-	path, dist := graph.ShortestPath(g, int(wo.currentLocation), int(warehouse.workAreaLocation))
+func (wo *worker) goHome(warehouse *warehouse) {
+	path, dist := graph.ShortestPath(warehouse.wGraph, int(wo.currentLocation), int(warehouse.workAreaLocation))
 	endOfPath := path[len(path)-1]
 	for i := 0; i < len(path); i++ {
 		// fmt.Println(path[i])
@@ -64,14 +64,22 @@ func (wo *worker) goHome(g *graph.Immutable, warehouse *warehouse) {
 	fmt.Println("Total Distance Traveled", wo.totalDistanceTraveled)
 }
 
-func (wo *worker) getProduct(sku string, quantity int, g *graph.Immutable, warehouse *warehouse) {
+func (wo *worker) getProduct(warehouse *warehouse, sku string, quantity int) {
 	aisleLoc := warehouse.productLocs[sku]
 
-	wo.move(aisleLoc, g, warehouse)
+	wo.move(warehouse,aisleLoc)
 	if wo.currentItems <= wo.dolly.capacity {
 		wo.currentItems = quantity
 	}
 	fmt.Println("Current Items on Dolly", wo.currentItems)
-
-	wo.goHome(g, warehouse)
+	wo.goHome(warehouse)
 }
+
+func (wo *worker) getCurrentLocation(warehouse *warehouse) {
+	if wo.currentLocation == warehouse.workAreaLocation{
+		fmt.Println("Current Location is:", "Home")
+	} else {
+		fmt.Println("Current Location is:", wo.currentLocation)
+	}
+}
+
