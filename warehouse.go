@@ -6,10 +6,6 @@ import (
 	"github.com/yourbasic/graph"
 )
 
-type workArea struct {
-	numberItems int
-}
-
 type area struct {
 	aisle
 	workArea
@@ -32,27 +28,29 @@ type warehouseGraph struct {
 }
 
 type warehouse struct {
-	junctions        map[junctionNode]junctionData
-	workers          []worker
-	workAreaLocation junctionNode
-	productLocs      map[string]int
-	aisleLocs        map[int]area
-	wGraph           *graph.Immutable
+	junctions     map[junctionNode]junctionData
+	workArea      workArea
+	productLocs   map[sku]int
+	aisleLocs     map[int]area
+	internalGraph *graph.Immutable
 }
 
-func (w *warehouse) initialize(init warehouse) {
-	w.junctions = init.junctions
-	w.workers = init.workers
-	w.workAreaLocation = init.workAreaLocation
-	w.productLocations(init)
-	w.aisleLocations(init)
-	w.wGraph = initializeGraph(warehouseGraph{w.getEdgeDistances(), w.getNeighborNodes()})
+
+func newWarehouse(init warehouse) *warehouse {
+	w := &warehouse{
+		junctions: init.junctions,
+		workArea:  init.workArea,
+	}
+	w.internalGraph = initializeGraph(warehouseGraph{w.getEdgeDistances(), w.getNeighborNodes()})
+	w.productLocs = productLocations(init)
+	w.aisleLocs = aisleLocations(init)
 	fmt.Println("Warehouse Initialized")
-	fmt.Println(w.wGraph)
+	fmt.Println(w.internalGraph)
 	fmt.Println()
-
+	return w
 }
 
+// Returns the edge distances for the warehouse graph
 func (w warehouse) getEdgeDistances() []int64 {
 	edgeDistances := make([]int64, len(w.junctions))
 
@@ -64,6 +62,7 @@ func (w warehouse) getEdgeDistances() []int64 {
 	return edgeDistances
 }
 
+// Returns the neighbor nodes for the warehouse graph
 func (w warehouse) getNeighborNodes() []neighborNode {
 	id := len(w.junctions)
 

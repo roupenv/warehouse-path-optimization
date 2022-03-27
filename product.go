@@ -1,12 +1,14 @@
 package main
 
+type sku string
 type product struct {
-	sku string
+	sku
 }
 
-type productLocation map[string]int
+type productLocation map[sku]int
 
-func (w *warehouse) productLocations(init warehouse) {
+
+func productLocations(init warehouse) productLocation {
 	newProductLocations := make(productLocation)
 	id := len(init.junctions)
 
@@ -19,5 +21,5 @@ func (w *warehouse) productLocations(init warehouse) {
 			id++
 		}
 	}
-	w.productLocs = newProductLocations
+	return newProductLocations
 }

@@ -1,5 +1,302 @@
 package main
 
+//Feet Per Second
+const walkingPace = 3.2
+
+var jobsConfig = []job{
+	{
+		id:       0,
+		sku:      "A",
+		quantity: 5,
+		status:   pending,
+	},
+	{
+		id:       1,
+		sku:      "AA",
+		quantity: 10,
+		status:   pending,
+	},
+	{
+		id:       1,
+		sku:      "H",
+		quantity: 10,
+		status:   pending,
+	},
+	{
+		id:       1,
+		sku:      "R",
+		quantity: 10,
+		status:   pending,
+	},
+	{
+		id:       1,
+		sku:      "Q",
+		quantity: 10,
+		status:   pending,
+	},
+	{
+		id:       0,
+		sku:      "A",
+		quantity: 5,
+		status:   pending,
+	},
+	{
+		id:       1,
+		sku:      "AA",
+		quantity: 10,
+		status:   pending,
+	},
+	{
+		id:       1,
+		sku:      "H",
+		quantity: 10,
+		status:   pending,
+	},
+	{
+		id:       1,
+		sku:      "R",
+		quantity: 10,
+		status:   pending,
+	},
+	{
+		id:       1,
+		sku:      "Q",
+		quantity: 10,
+		status:   pending,
+	}, {
+		id:       0,
+		sku:      "A",
+		quantity: 5,
+		status:   pending,
+	},
+	{
+		id:       1,
+		sku:      "AA",
+		quantity: 10,
+		status:   pending,
+	},
+	{
+		id:       1,
+		sku:      "H",
+		quantity: 10,
+		status:   pending,
+	},
+	{
+		id:       1,
+		sku:      "R",
+		quantity: 10,
+		status:   pending,
+	},
+	{
+		id:       1,
+		sku:      "Q",
+		quantity: 10,
+		status:   pending,
+	}, {
+		id:       0,
+		sku:      "A",
+		quantity: 5,
+		status:   pending,
+	},
+	{
+		id:       1,
+		sku:      "AA",
+		quantity: 10,
+		status:   pending,
+	},
+	{
+		id:       1,
+		sku:      "H",
+		quantity: 10,
+		status:   pending,
+	},
+	{
+		id:       1,
+		sku:      "R",
+		quantity: 10,
+		status:   pending,
+	},
+	{
+		id:       1,
+		sku:      "Q",
+		quantity: 10,
+		status:   pending,
+	}, {
+		id:       0,
+		sku:      "A",
+		quantity: 5,
+		status:   pending,
+	},
+	{
+		id:       1,
+		sku:      "AA",
+		quantity: 10,
+		status:   pending,
+	},
+	{
+		id:       1,
+		sku:      "H",
+		quantity: 10,
+		status:   pending,
+	},
+	{
+		id:       1,
+		sku:      "R",
+		quantity: 10,
+		status:   pending,
+	},
+	{
+		id:       1,
+		sku:      "Q",
+		quantity: 10,
+		status:   pending,
+	}, {
+		id:       0,
+		sku:      "A",
+		quantity: 5,
+		status:   pending,
+	},
+	{
+		id:       1,
+		sku:      "AA",
+		quantity: 10,
+		status:   pending,
+	},
+	{
+		id:       1,
+		sku:      "H",
+		quantity: 10,
+		status:   pending,
+	},
+	{
+		id:       1,
+		sku:      "R",
+		quantity: 10,
+		status:   pending,
+	},
+	{
+		id:       1,
+		sku:      "Q",
+		quantity: 10,
+		status:   pending,
+	}, {
+		id:       0,
+		sku:      "A",
+		quantity: 5,
+		status:   pending,
+	},
+	{
+		id:       1,
+		sku:      "AA",
+		quantity: 10,
+		status:   pending,
+	},
+	{
+		id:       1,
+		sku:      "H",
+		quantity: 10,
+		status:   pending,
+	},
+	{
+		id:       1,
+		sku:      "R",
+		quantity: 10,
+		status:   pending,
+	},
+	{
+		id:       1,
+		sku:      "Q",
+		quantity: 10,
+		status:   pending,
+	}, {
+		id:       0,
+		sku:      "A",
+		quantity: 5,
+		status:   pending,
+	},
+	{
+		id:       1,
+		sku:      "AA",
+		quantity: 10,
+		status:   pending,
+	},
+	{
+		id:       1,
+		sku:      "H",
+		quantity: 10,
+		status:   pending,
+	},
+	{
+		id:       1,
+		sku:      "R",
+		quantity: 10,
+		status:   pending,
+	},
+	{
+		id:       1,
+		sku:      "Q",
+		quantity: 10,
+		status:   pending,
+	}, {
+		id:       0,
+		sku:      "A",
+		quantity: 5,
+		status:   pending,
+	},
+	{
+		id:       1,
+		sku:      "AA",
+		quantity: 10,
+		status:   pending,
+	},
+	{
+		id:       1,
+		sku:      "H",
+		quantity: 10,
+		status:   pending,
+	},
+	{
+		id:       1,
+		sku:      "R",
+		quantity: 10,
+		status:   pending,
+	},
+	{
+		id:       1,
+		sku:      "Q",
+		quantity: 10,
+		status:   pending,
+	}, {
+		id:       0,
+		sku:      "A",
+		quantity: 5,
+		status:   pending,
+	},
+	{
+		id:       1,
+		sku:      "AA",
+		quantity: 10,
+		status:   pending,
+	},
+	{
+		id:       1,
+		sku:      "H",
+		quantity: 10,
+		status:   pending,
+	},
+	{
+		id:       1,
+		sku:      "R",
+		quantity: 10,
+		status:   pending,
+	},
+	{
+		id:       1,
+		sku:      "Q",
+		quantity: 10,
+		status:   pending,
+	},
+}
 var warehouseConfig = warehouse{
 	junctions: map[junctionNode]junctionData{
 		0: {
@@ -144,15 +441,8 @@ var warehouseConfig = warehouse{
 			},
 		},
 	},
-	workers: []worker{
-		{
-			id: 0,
-			dolly: dolly{
-				capacity: 12,
-			},
-			status:          idle,
-			currentLocation: 14,
-		},
+	workArea: workArea{
+		numberItems: 0,
+		location: 14,
 	},
-	workAreaLocation: 14,
 }

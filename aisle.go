@@ -11,7 +11,8 @@ type aisle struct {
 
 type aisleLocation map[int]area
 
-func (w *warehouse) aisleLocations(init warehouse) {
+
+func aisleLocations(init warehouse) aisleLocation{
 	newAisleLocations := make(aisleLocation)
 	id := len(init.junctions)
 
@@ -21,18 +22,26 @@ func (w *warehouse) aisleLocations(init warehouse) {
 			id++
 		}
 	}
-	w.aisleLocs = newAisleLocations
+	return newAisleLocations
 }
 
 func (w *warehouse) occupyAisle(aisleId int, workerId int) {
 	aisleToUpdate := w.aisleLocs[aisleId]
 	aisleToUpdate.aisle.occupied = true
-	fmt.Printf("Aisle %v Occupied By Worker %v \n", aisleId, workerId)
+	if aisleId == int(w.workArea.location) {
+		fmt.Printf("Home Occupied By Worker %v \n", workerId)
+	} else {
+		fmt.Printf("Aisle %v Occupied By Worker %v \n", aisleId, workerId)
+	}
 }
 
 func (w *warehouse) unoccupiedAisle(aisleId int, workerId int) {
 	aisleToUpdate := w.aisleLocs[aisleId]
 	aisleToUpdate.aisle.occupied = false
-	fmt.Printf("Aisle %v No Longer Occupied by Worker %v \n", aisleId, workerId)
+	if aisleId == int(w.workArea.location) {
+		fmt.Printf("Worker %v Left Home  \n", workerId)
+	} else {
+		fmt.Printf("Aisle %v No Longer Occupied by Worker %v \n", aisleId, workerId)
+	}
 
 }

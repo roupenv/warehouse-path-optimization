@@ -2,6 +2,7 @@ package main
 
 import "github.com/yourbasic/graph"
 
+// Initializes the graph for the warehouse
 func initializeGraph(graphNodes warehouseGraph) *graph.Immutable {
 	numberVertices := (len(graphNodes.edges) + 1) + (len(graphNodes.neighbors))
 	g := graph.New(numberVertices)

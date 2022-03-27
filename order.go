@@ -1,10 +1,9 @@
 package main
 
 type lineItem struct {
-	sku	string
+	sku      string
 	quantity int
 }
-
 
 type order []lineItem
 

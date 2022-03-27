@@ -1,6 +1,10 @@
 package main
 
-import "sort"
+import (
+	"math/rand"
+	"sort"
+	"time"
+)
 
 func sortMap[T ~int, J any](input map[T]J) []T {
 	var keys = make([]T, len(input))
@@ -11,4 +15,9 @@ func sortMap[T ~int, J any](input map[T]J) []T {
 		return keys[i] < keys[j]
 	})
 	return keys
+}
+
+func sleepRandomTime(factor int) {
+	rand.Seed(time.Now().UnixNano())
+	time.Sleep(time.Duration(rand.Intn(factor*10)) * time.Millisecond)
 }

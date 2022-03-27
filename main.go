@@ -1,32 +1,43 @@
 package main
 
-// import "fmt"
+import (
+	"flag"
+	"fmt"
+	"os"
+	"time"
+)
+
+var defaultStdOut = os.Stdout // keep backup of original stdout
 
 func main() {
-	var warehouse warehouse
-	warehouse.initialize(warehouseConfig)
-	worker := warehouse.workers[0]
-	worker.move(&warehouse, 0)
-	worker.move(&warehouse, 1)
+	shouldPrint := flag.Bool("p", false, "print the results") // flag to print the results
+	flag.Parse() 
 
-	// worker.getProduct(&warehouse, "AD", 10)
-	// worker.getProduct(&warehouse,"A", 10)
-	// worker.getCurrentLocation(&warehouse)
+	if !*shouldPrint { // if the flag is not set, redirect the output to a dummy writer
+		os.Stdout = nil // turn off printing by redirecting stdout to /dev/null
+	}
 
-	// newOrder := order{
-	// 	lineItem{ "A", 20},
-	// 	lineItem{ "B", 20},
-	// 	lineItem{ "C", 20},
-	// 	lineItem{ "D", 20},
-	// 	lineItem{ "E", 20},
-	// 	lineItem{ "F", 20},
-	// 	lineItem{ "G", 20},
-	// }
+	//Start Recording the Time
+	start := time.Now()
 
-	// var sim sim
-	// sim.startWork(worker, newOrder)
-	// sim.incrementClock()
+	//Initialize the Warehouse
+	warehouse := newWarehouse(warehouseConfig) 
 
-	// fmt.Println(sim.clock)
+	
+	//Initialize the JobBatch
+	jobBatch := newJobBatch(jobsConfig, len(jobsConfig))
+	
+	//Initialize the Workers
+	workersConfig := workerGenerator(2, warehouse)
+	newWorkerPool := newWorkerPool(workersConfig)
+	
+	//Initialize Results
+	resultsConfig := newResult()
+
+	//Start Processing the Jobs
+	newWorkerPool.processJobs(jobBatch, true, resultsConfig)
+
+	//Stop calculating the time
+	duration := time.Since(start)
+	fmt.Println("Runtime duration", duration)
 }
-
