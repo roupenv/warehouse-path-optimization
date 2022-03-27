@@ -20,6 +20,20 @@ func newResult() *allResults {
 	}
 }
 
+//Get worker stats from each worker and send down results channel
+func (r *allResults) getResults(wP workerPool) {
+	go func() {
+		defer close(r.resultChan)
+		for _, worker := range wP.workers {
+			workerData := result{
+				worker.id,
+				worker.workerStats,
+			}
+			r.resultChan <- workerData
+		}
+	}()
+}
+
 func (r *allResults) printResults() {
 	os.Stdout = defaultStdOut // restore Standard Out to print table
 

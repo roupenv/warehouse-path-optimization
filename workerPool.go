@@ -5,6 +5,7 @@ import (
 	"sync"
 )
 
+// Use sync.WaitGroup to wait for all jobs to be completed
 var wg sync.WaitGroup
 
 type workerPool struct {
@@ -40,64 +41,62 @@ func (wP *workerPool) getAvailableWorker() {
 	}()
 }
 
+func (wP *workerPool) getNextAvailableWorker() {
+	//TODO Implement Priority Queue to grab least utilized worker
+}
+
 func (wP *workerPool) addWorkerBackToPool(wo *worker) {
 	wP.workerChan <- wo
 	wg.Done()
 
 }
 
-func (wP workerPool) processJobs(jB *jobBatch, concurrent bool, r *allResults) {
+func (wP workerPool) processJobs(jB *jobBatch, concurrent bool) *allResults {
+	//Initialize Results
+	results := newResult()
+
+	//Start sending jobs
 	pendingJob := jB.sendJobs()
-	// Will start sending workers to the pool
+
+	// Start sending workers to the pool
 	wP.getAvailableWorker()
+
+	//Iterate over all jobs and assign to idle worker
 	for i := 0; i < len(jB.jobs); i++ {
+
+		// Increment the wait group
 		wg.Add(1)
 
-		//Will get a worker from the pool, like ticket system in the market
-		// if new workers are added it will be added to the pool
-		nextWorker := <-wP.workerChan
-		fmt.Println(nextWorker.totalDistanceTraveled)
-		//Will pull job from the pending job channel
-		nextJob := <-pendingJob
-		if nextWorker.status == idle {
-			fmt.Println("Grabbed Worker")
-			fmt.Println("Worker ID:", nextWorker.id, "is currently", nextWorker.getStatus())
+		//Pull an idle worker from the pool, like ticket system in the market
+		// if new workers are added to buffered channel, it will be added to the pool
+		nextWorkerInQueue := <-wP.workerChan
+
+		//Pull job from the pending job channel
+		nextJobInQueue := <-pendingJob
+		if nextWorkerInQueue.status == idle {
+
+			fmt.Println("Grabbed Worker ID:", nextWorkerInQueue.id, "for Job ID:", nextJobInQueue.id)
+
 			if concurrent { //Run All jobs concurrently
-				go nextWorker.assignJob(nextJob, &wP)
+				go nextWorkerInQueue.assignJob(nextJobInQueue, &wP)
 			} else { //Run All jobs sequentially
-				nextWorker.assignJob(nextJob, &wP)
+				nextWorkerInQueue.assignJob(nextJobInQueue, &wP)
 			}
-			nextJob.status = wip
+
+			nextJobInQueue.status = wip
+			//TODO Add to RealTime WIP Report
 		}
 	}
-	// Block Function until completed channel is closed
+	// Block Function/Thread until completed channel is closed
 	wg.Wait()
 
-	go func() {
-		wP.sendResults(r)
-	}()
-	r.printResults()
+	//Gather Results
+	results.getResults(wP)
 
-	// go func() {
-	// 	time.Sleep(time.Second * 5)
-	// 	wP.completed <- true
-	// }()
-
-	// wP.sendResults()
+	return results
 }
 
-func (wP *workerPool) sendResults(r *allResults) {
-	//Get worker stats from each worker
-	defer close(r.resultChan)
-	for _, worker := range wP.workers {
-		workerData := result{
-			worker.id,
-			worker.workerStats,
-		}
-		r.resultChan <- workerData
-	}
 
-}
 
 func (wP *workerPool) gatherResults(result) {
 	//TODO

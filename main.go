@@ -11,7 +11,7 @@ var defaultStdOut = os.Stdout // keep backup of original stdout
 
 func main() {
 	shouldPrint := flag.Bool("p", false, "print the results") // flag to print the results
-	flag.Parse() 
+	flag.Parse()
 
 	if !*shouldPrint { // if the flag is not set, redirect the output to a dummy writer
 		os.Stdout = nil // turn off printing by redirecting stdout to /dev/null
@@ -21,21 +21,20 @@ func main() {
 	start := time.Now()
 
 	//Initialize the Warehouse
-	warehouse := newWarehouse(warehouseConfig) 
+	warehouse := newWarehouse(warehouseConfig)
 
-	
 	//Initialize the JobBatch
 	jobBatch := newJobBatch(jobsConfig, len(jobsConfig))
-	
+
 	//Initialize the Workers
 	workersConfig := workerGenerator(2, warehouse)
 	newWorkerPool := newWorkerPool(workersConfig)
-	
-	//Initialize Results
-	resultsConfig := newResult()
 
 	//Start Processing the Jobs
-	newWorkerPool.processJobs(jobBatch, true, resultsConfig)
+	results := newWorkerPool.processJobs(jobBatch, true)
+
+	//Print Results
+	results.printResults()
 
 	//Stop calculating the time
 	duration := time.Since(start)
